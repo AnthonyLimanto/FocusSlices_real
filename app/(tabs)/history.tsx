@@ -9,7 +9,7 @@ export default function HistoryScreen() {
                 alignItems: "center",
             }}
         >
-            <Text>Edit app/(home)/history.tsx to edit this screen.</Text>
+            <Text>Placeholder</Text>
         </View>
     );
 }
