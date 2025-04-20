@@ -3,7 +3,9 @@ import { View } from "react-native";
 import { Text } from "@gluestack-ui/themed";
 import { useSessionStore } from "../session/sessionStore";
 import { Button, ButtonText } from "@/components/ui/button"
-import { VStack } from "@/components/ui/vstack"
+import { VStack} from "@/components/ui/vstack"
+import { HStack } from "@/components/ui/hstack";
+import { Center } from "@/components/ui/center";
 
 const formatTime = (s: number) => {
     const minutes = Math.floor(s / 60);
@@ -14,18 +16,42 @@ const formatTime = (s: number) => {
 
 
 export default function Timer() {
-    const {remaining, startSession, resumeSession, pauseSession} = useSessionStore();
+    const {remaining, startSession, resumeSession, pauseSession, isRunning} = useSessionStore();
     const handleStart = () => {
         const intervals = [1, 5, 25]; // durations in minutes
         startSession(intervals);
       };
+
+    const handlePause = () => {
+        pauseSession();
+    };
+
+    const handleResume = () => {
+        resumeSession();
+    };
+
     return (
         <VStack space="md">
-            <Text>Timer</Text>
-            <Text> {formatTime(remaining)}</Text>
-            <Button size="md" variant="solid" action="primary" onPress={handleStart}>
-                <ButtonText>Start Session</ButtonText>
-            </Button>
+            <Center>
+                <Text>Timer</Text>
+                <Text> {formatTime(remaining)}</Text>
+                <HStack space="md">
+                    {remaining === 0 ? (
+                        <Button size="md" variant="solid" action="primary" onPress={handleStart}>
+                            <ButtonText>Start Session</ButtonText>
+                        </Button>
+                        ) : isRunning ? (
+                        <Button size="md" variant="solid" action="primary" onPress={handlePause}>
+                            <ButtonText>Pause Session</ButtonText>
+                        </Button>
+                        ) : (
+                            <Button size="md" variant="solid" action="primary" onPress={handleResume}>
+                                <ButtonText>Resume Session</ButtonText>
+                            </Button>
+                        )
+                    }
+                </HStack>
+            </Center>
         </VStack>
     );
 }
