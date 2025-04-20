@@ -1,7 +1,9 @@
 import React from "react";
 import { View } from "react-native";
-import { Button, Text, VStack } from "@gluestack-ui/themed";
+import { Text } from "@gluestack-ui/themed";
 import { useSessionStore } from "../session/sessionStore";
+import { Button, ButtonText } from "@/components/ui/button"
+import { VStack } from "@/components/ui/vstack"
 
 const formatTime = (s: number) => {
     const minutes = Math.floor(s / 60);
@@ -10,12 +12,20 @@ const formatTime = (s: number) => {
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
 };
 
-export default function HistoryScreen() {
-    const remaining = useSessionStore((state) => state.remaining)
+
+export default function Timer() {
+    const {remaining, startSession, resumeSession, pauseSession} = useSessionStore();
+    const handleStart = () => {
+        const intervals = [1, 5, 25]; // durations in minutes
+        startSession(intervals);
+      };
     return (
-        <VStack>
+        <VStack space="md">
             <Text>Timer</Text>
             <Text> {formatTime(remaining)}</Text>
+            <Button size="md" variant="solid" action="primary" onPress={handleStart}>
+                <ButtonText>Start Session</ButtonText>
+            </Button>
         </VStack>
     );
 }
