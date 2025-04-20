@@ -8,6 +8,8 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     timer: null,
 
     startSession: (intervals) => {
+        const { isRunning } = get();
+        if (isRunning) return;
         const firstInterval = intervals[0] * 60;
         set({
             intervals,          // Save the full intervals array in state
