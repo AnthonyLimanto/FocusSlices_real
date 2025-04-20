@@ -1,6 +1,10 @@
 import { Text, View } from "react-native";
+import { useSessionStore } from "../session/sessionStore";
+import Timer from "../components/Timer";
+
 
 export default function Index() {
+  
   return (
     <View
       style={{
@@ -10,6 +14,7 @@ export default function Index() {
       }}
     >
       <Text>Hello world</Text>
+      <Timer></Timer>
     </View>
   );
 }
