@@ -1,8 +1,70 @@
 import { create } from 'zustand';
 
-export const useSessionStore = create<SessionState>(() => ({
-    intervals: [],
+export const useSessionStore = create<SessionState>((set, get) => ({
+    intervals: [], // in mins
     currentIndex: 0,
     remaining: 0,
-    isRunning: true
-}));
+    isRunning: false,
+    timer: null,
+
+    startSession: (intervals) => {
+        const firstInterval = intervals[0] * 60;
+        set({
+            intervals,          // Save the full intervals array in state
+            currentIndex: 0,    // Start at the first interval
+            remaining: firstInterval, // Set how much time is left (in seconds)
+            isRunning: true,    // Mark the session as active
+          });
+        
+        const timer = setInterval(() => get().tick(), 1000);
+        set({timer});
+    },
+
+    tick: () => {
+        const{ remaining, nextInterval} = get();
+        if (remaining <= 1){
+            nextInterval();
+        } else {
+            set((state) => ({remaining: state.remaining - 1}));
+        }
+    },
+
+    nextInterval: () => {
+        const{intervals, currentIndex, timer} = get();
+
+        if (timer) clearInterval(timer);
+        
+        const nextIndex = currentIndex + 1;
+        if (nextIndex >= intervals.length) {
+            set({isRunning: false, timer: null})
+        } else {
+            const newTime = intervals[nextIndex] * 60;
+            const newTimer = setInterval(() => get().tick(), 1000);
+            set({remaining: newTime,
+                currentIndex: nextIndex,
+                isRunning: true,
+                timer: newTimer
+            })
+        }
+    },
+
+    pauseSession: () => {
+        const{ timer } = get();
+        if(timer) clearInterval(timer);
+        set({
+            isRunning: false,
+            timer: null
+        });
+    },
+
+    resumeSession: () => {
+        const { isRunning } = get();
+        if (!isRunning) {
+            const timer = setInterval(() => get().tick(), 1000);
+            set({
+                isRunning: true,
+                timer
+            })
+        }
+    }
+}));    
