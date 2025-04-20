@@ -36,7 +36,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
         
         const nextIndex = currentIndex + 1;
         if (nextIndex >= intervals.length) {
-            set({isRunning: false, timer: null})
+            set({isRunning: false, timer: null, remaining: 0})
         } else {
             const newTime = intervals[nextIndex] * 60;
             const newTimer = setInterval(() => get().tick(), 1000);
