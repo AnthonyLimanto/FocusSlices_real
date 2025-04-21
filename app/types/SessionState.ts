@@ -1,5 +1,6 @@
 type SessionState = {
     intervals: number[];
+    intervalsTitle: string[]
     currentIndex: number;
     remaining: number;
     isRunning: boolean;
@@ -10,3 +11,4 @@ type SessionState = {
     tick: () => void;            // Handle tick for remaining time
     nextInterval: () => void;    // Move to the next interval
   };
+  // TODO add array of string to hold interval's name

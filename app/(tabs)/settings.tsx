@@ -1,4 +1,5 @@
 import { View, Text } from "react-native";
+import AddInterval from "../components/AddInterval";
 
 export default function HistoryScreen() {
     return (
@@ -10,6 +11,7 @@ export default function HistoryScreen() {
             }}
         >
             <Text>Placeholder</Text>
+            <AddInterval></AddInterval>
         </View>
     );
 }
