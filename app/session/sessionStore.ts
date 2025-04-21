@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 export const useSessionStore = create<SessionState>((set, get) => ({
     intervals: [], // in mins
+    intervalsTitle: [],
     currentIndex: 0,
     remaining: 0,
     isRunning: false,
@@ -68,5 +69,14 @@ export const useSessionStore = create<SessionState>((set, get) => ({
                 timer
             })
         }
+    },
+
+    addInterval: (mins: number, title: string) => {
+        const{intervals, intervalsTitle} = get();
+        intervals.push(mins);
+        intervalsTitle.push(title);
+        set({
+            intervals, intervalsTitle
+        })
     }
 }));    

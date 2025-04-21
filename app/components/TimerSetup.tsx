@@ -14,6 +14,7 @@ import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import Intervals from "./Intervals";
 import { Button, ButtonText } from "@/components/ui/button";
+import AddInterval from "./AddInterval";
 
 
 // TODO set up a return a button that sets up a modal to set the intervals in session Store, set up interval picker componenet, set up interval component
@@ -41,7 +42,7 @@ const combineIntervals = (intervals: number[], titles: string[]) => {
 }
 
 const handleAddInterval = () => {
-	
+
 }
 
 export default function TimerSetup() {
@@ -58,9 +59,7 @@ export default function TimerSetup() {
 					onEndReachedThreshold={0.5}
 					ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
 				/>
-				<Button onPress={handleAddInterval}>
-					<ButtonText> Add Interval</ButtonText>
-				</Button>
+				<AddInterval></AddInterval>
           	</Center>
         </VStack>
     );

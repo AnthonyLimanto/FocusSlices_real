@@ -10,5 +10,6 @@ type SessionState = {
     resumeSession: () => void;   // Resume session
     tick: () => void;            // Handle tick for remaining time
     nextInterval: () => void;    // Move to the next interval
+    addInterval: (mins: number, title: string) => void;
   };
   // TODO add array of string to hold interval's name

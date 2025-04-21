@@ -15,12 +15,15 @@ import { Text, TextInput } from "react-native";
 import {Picker} from '@react-native-picker/picker';
 import WheelPickerExpo from 'react-native-wheel-picker-expo'; // Ensure this is the correct library
 import { ItemType } from "react-native-wheel-picker-expo/lib/typescript/types";
+import { useSessionStore } from "../session/sessionStore";
 // import { useSessionStore } from "../session/sessionStore"; // Uncomment and use when ready
 
 const AddInterval = () => {
   const [showActionsheet, setShowActionsheet] = useState(false);
   const [selectedMinutes, setSelectedMinutes] = useState(0); // default to 25
   const [title, setTitle] = useState("");
+  const {intervals, intervalsTitle, addInterval} = useSessionStore();
+
 
   const values: ItemType[] = Array.from({ length: 60 }, (_, i) => ({
     label: `${i + 1} min`,
@@ -31,9 +34,9 @@ const AddInterval = () => {
 
   const handleSave = () => {
     if (!title.trim()) return;
-
+    
     // TODO: Save to Zustand
-    // addInterval({ title, mins: selectedMinutes });
+    addInterval(selectedMinutes, title);
 
     console.log("Saving interval:", { title, mins: selectedMinutes });
     setTitle("");
@@ -73,7 +76,7 @@ const AddInterval = () => {
               </Box>
 
               <Box>
-                <Text style={{ textAlign: "center", marginVertical: 8 }}>Select Minutes</Text>
+                <Text style={{ marginVertical: 8, marginBottom: 4, fontSize: 16 }}>Select Minutes</Text>
                 <WheelPickerExpo
                     items={values} // Use the array of ItemType objects
                     initialSelectedIndex={selectedMinutes - 1} // 0-based index

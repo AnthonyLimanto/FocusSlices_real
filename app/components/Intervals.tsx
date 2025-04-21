@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 import { Text } from "react-native";
 import { Box } from "@/components/ui/box";
+import { HStack } from "@/components/ui/hstack";
+import { Center } from "@/components/ui/center";
 
 interface IntervalProps {
   title: string;
@@ -10,7 +12,13 @@ interface IntervalProps {
 const Interval: FC<IntervalProps> = ({ title, mins }) => {
   return (
     <Box>
-      <Text>{title}: {mins} mins</Text>
+        <Center>
+            <HStack space="md">
+                <Text>{title}</Text>
+                <Text>:</Text>
+                <Text>{mins} mins</Text>
+            </HStack>
+        </Center>
     </Box>
   );
 };

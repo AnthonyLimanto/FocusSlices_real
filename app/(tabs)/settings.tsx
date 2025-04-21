@@ -1,5 +1,6 @@
 import { View, Text } from "react-native";
 import AddInterval from "../components/AddInterval";
+import TimerSetup from "../components/TimerSetup";
 
 export default function HistoryScreen() {
     return (
@@ -11,7 +12,7 @@ export default function HistoryScreen() {
             }}
         >
             <Text>Placeholder</Text>
-            <AddInterval></AddInterval>
+            <TimerSetup></TimerSetup>
         </View>
     );
 }
