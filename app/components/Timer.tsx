@@ -16,9 +16,8 @@ const formatTime = (s: number) => {
 
 
 export default function Timer() {
-    const {remaining, startSession, resumeSession, pauseSession, isRunning} = useSessionStore();
+    const {remaining, startSession, resumeSession, pauseSession, isRunning, intervals, intervalsTitle, currentIndex} = useSessionStore();
     const handleStart = () => {
-        const intervals = [1, 5, 25]; // durations in minutes
         startSession(intervals);
       };
 
@@ -34,6 +33,7 @@ export default function Timer() {
         <VStack space="md">
             <Center>
                 <Text>Timer</Text>
+                <Text>{intervalsTitle[currentIndex]}</Text>
                 <Text> {formatTime(remaining)}</Text>
                 <HStack space="md">
                     {remaining === 0 ? (
