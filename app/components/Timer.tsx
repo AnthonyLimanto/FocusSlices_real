@@ -6,6 +6,7 @@ import { Button, ButtonText } from "@/components/ui/button"
 import { VStack} from "@/components/ui/vstack"
 import { HStack } from "@/components/ui/hstack";
 import { Center } from "@/components/ui/center";
+import PieChartTimer from "./PieChartTimer";
 
 const formatTime = (s: number) => {
     const minutes = Math.floor(s / 60);
@@ -35,6 +36,7 @@ export default function Timer() {
                 <Text>Timer</Text>
                 <Text>{intervalsTitle[currentIndex]}</Text>
                 <Text> {formatTime(remaining)}</Text>
+                <PieChartTimer></PieChartTimer>
                 <HStack space="md">
                     {remaining === 0 ? (
                         <Button size="md" variant="solid" action="primary" onPress={handleStart}>

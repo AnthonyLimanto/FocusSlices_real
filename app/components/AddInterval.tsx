@@ -50,7 +50,7 @@ const AddInterval = () => {
         <ButtonText>+ Add Interval</ButtonText>
       </Button>
 
-      <Actionsheet isOpen={showActionsheet} onClose={handleClose} snapPoints={[36]}>
+      <Actionsheet isOpen={showActionsheet} onClose={handleClose} snapPoints={[70]}>
         <ActionsheetBackdrop />
         <ActionsheetContent>
           <ActionsheetDragIndicatorWrapper>
