@@ -65,411 +65,59 @@ const PieChartTimer: FC<PieChartTimer> = ({ radius = 150 }) => {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const slices = getPieSlices(intervals, intervalsTitle);
     const center = radius;
+
+	const handlePress = (event: any) => {
+		const { locationX, locationY } = event.nativeEvent;
+	
+		// Calculate the difference between the touch point and the center
+		const dx = locationX - center;
+		const dy = locationY - center;
+	
+		// Calculate the angle in degrees (0-360) and ensure it's positive
+		const angle = (Math.atan2(dy, dx) * 180) / Math.PI + 90;
+		const normalizedAngle = (angle + 360) % 360; // Normalize to 0-360 degrees
+	
+		// Calculate the distance from the center
+		const distance = Math.sqrt(dx * dx + dy * dy);
+		console.log(`x: ${dx}, y ${dy}`);
+		// Check if the touch is within the radius of the pie chart
+		if (distance <= radius) {
+			for (let i = 0; i < slices.length; i++) {
+				const slice = slices[i];
+	
+				// Check if the angle falls within the slice's start and end angles
+				if (
+					normalizedAngle >= slice.startAngle &&
+					normalizedAngle <= slice.startAngle + slice.sweepAngle
+				) {
+					setSelectedIndex(i);
+					console.log(`Slice ${i} tapped`);
+					return;
+				}
+			}
+		}
+	};
     return (
         <View style={styles.container}>
-          <Svg width={radius * 2} height={radius * 2}>
-            {slices.map((slice, i) => {
-              const isSelected = selectedIndex === i;
-              return (
-                <Path
-                  key={i}
-                  d={describeArc(center, center, radius, slice.startAngle, slice.sweepAngle)}
-                  fill={isSelected ? darkenColor(slice.color, 0.2) : slice.color}
-                />
-              );
-            })}
-          </Svg>
-          {/* Middle hit box */}
-          {slices.map((slice, i) => {
-            const angle = slice.startAngle + slice.sweepAngle / 2;
-            const radians = (angle - 90) * (Math.PI / 180);
-            const x = center + (radius / 2) * Math.cos(radians);
-            const y = center + (radius / 2) * Math.sin(radians);
-    
-            return (
-              <Pressable
-                key={i}
-                onPressIn={() => {
-                  console.log("Slice tapped or clicked!");
-                  setSelectedIndex(i);
-                }}
-                onPressOut={() => setSelectedIndex(null)}
-                style={[
-                  styles.pressable,
-                  {
-                    left: x,
-                    top: y,
-                  },
-                ]}
-                hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
-              />
-            );
-          })}
-          {/* Middle hit box middle */}
-          {slices.map((slice, i) => {
-            const angle = slice.startAngle + slice.sweepAngle * 0.25;
-            const radians = (angle - 90) * (Math.PI / 180);
-            const x = center + (radius / 2) * Math.cos(radians);
-            const y = center + (radius / 2) * Math.sin(radians);
-    
-            return (
-              <Pressable
-                key={i}
-                onPressIn={() => {
-                  console.log("Slice tapped or clicked!");
-                  setSelectedIndex(i);
-                }}
-                onPressOut={() => setSelectedIndex(null)}
-                style={[
-                  styles.pressable,
-                  {
-                    left: x,
-                    top: y,
-                  },
-                ]}
-                hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
-              />
-            );
-          })}
-          {/* Middle hit box middle last */}
-          {slices.map((slice, i) => {
-            const angle = slice.startAngle + slice.sweepAngle * 0.75;
-            const radians = (angle - 90) * (Math.PI / 180);
-            const x = center + (radius / 2) * Math.cos(radians);
-            const y = center + (radius / 2) * Math.sin(radians);
-    
-            return (
-              <Pressable
-                key={i}
-                onPressIn={() => {
-                  console.log("Slice tapped or clicked!");
-                  setSelectedIndex(i);
-                }}
-                onPressOut={() => setSelectedIndex(null)}
-                style={[
-                  styles.pressable,
-                  {
-                    left: x,
-                    top: y,
-                  },
-                ]}
-                hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
-              />
-            );
-          })}
-          {/* start angle hit box */}
-          {slices.map((slice, i) => {
-            const angle = slice.startAngle + 5;
-            const radians = (angle - 90) * (Math.PI / 180);
-            const x = center + radius * Math.cos(radians);
-            const y = center + radius * Math.sin(radians);
-    
-            return (
-              <Pressable
-                key={i}
-                onPressIn={() => {
-                  console.log("start angle hit box");
-                  setSelectedIndex(i);
-                }}
-                onPressOut={() => setSelectedIndex(null)}
-                style={[
-                  styles.pressable,
-                  {
-                    left: x,
-                    top: y,
-                  },
-                ]}
-                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
-              />
-            );
-          })}
-          {/* start angle hit box middle */}
-          {slices.map((slice, i) => {
-            const angle = slice.startAngle + 4;
-            const radians = (angle - 90) * (Math.PI / 180);
-            const x = center + (radius / 2) * Math.cos(radians);
-            const y = center + (radius / 2) * Math.sin(radians);
-    
-            return (
-              <Pressable
-                key={i}
-                onPressIn={() => {
-                  console.log("start angle hit box");
-                  setSelectedIndex(i);
-                }}
-                onPressOut={() => setSelectedIndex(null)}
-                style={[
-                  styles.pressable,
-                  {
-                    left: x,
-                    top: y,
-                  },
-                ]}
-                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
-              />
-            );
-          })}
-          {/* Middle Edge hitbox */}
-          {slices.map((slice, i) => {
-            const angle = slice.startAngle + slice.sweepAngle / 2;
-            const radians = (angle - 90) * (Math.PI / 180);
-            const x = center + radius * Math.cos(radians);
-            const y = center + radius * Math.sin(radians);
-    
-            return (
-              <Pressable
-                key={i}
-                onPressIn={() => {
-                  console.log("Middle Edge");
-                  setSelectedIndex(i);
-                }}
-                onPressOut={() => setSelectedIndex(null)}
-                style={[
-                  styles.pressable,
-                  {
-                    left: x,
-                    top: y,
-                  },
-                ]}
-                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-              />
-            );
-          })}
-          {/* End angle Edge hitbox */}
-          {slices.map((slice, i) => {
-            const angle = slice.startAngle + slice.sweepAngle - 5;
-            const radians = (angle - 90) * (Math.PI / 180);
-            const x = center + radius * Math.cos(radians);
-            const y = center + radius * Math.sin(radians);
-    
-            return (
-              <Pressable
-                key={i}
-                onPressIn={() => {
-                  console.log("End angle Edge hitbox");
-                  setSelectedIndex(i);
-                }}
-                onPressOut={() => setSelectedIndex(null)}
-                style={[
-                  styles.pressable,
-                  {
-                    left: x,
-                    top: y,
-                  },
-                ]}
-                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
-              />
-            );
-          })}
-          {/* 1st quarter angle Edge hitbox */}
-          {slices.map((slice, i) => {
-            const angle = slice.startAngle + slice.sweepAngle / 4;
-            const radians = (angle - 90) * (Math.PI / 180);
-            const x = center + radius * Math.cos(radians);
-            const y = center + radius * Math.sin(radians);
-    
-            return (
-              <Pressable
-                key={i}
-                onPressIn={() => {
-                  console.log("1st quarter angle Edge hitbox");
-                  setSelectedIndex(i);
-                }}
-                onPressOut={() => setSelectedIndex(null)}
-                style={[
-                  styles.pressable,
-                  {
-                    left: x,
-                    top: y,
-                  },
-                ]}
-                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
-              />
-            );
-          })}
-          {/* 1st quarter angle middle hitbox */}
-          {slices.map((slice, i) => {
-            const angle = slice.startAngle + slice.sweepAngle / 4;
-            const radians = (angle - 90) * (Math.PI / 180);
-            const x = center + (radius / 2) * Math.cos(radians);
-            const y = center + (radius / 2) * Math.sin(radians);
-    
-            return (
-              <Pressable
-                key={i}
-                onPressIn={() => {
-                  console.log(" 1st quarter angle middle hitbox");
-                  setSelectedIndex(i);
-                }}
-                onPressOut={() => setSelectedIndex(null)}
-                style={[
-                  styles.pressable,
-                  {
-                    left: x,
-                    top: y,
-                  },
-                ]}
-                hitSlop={{ top: 7, bottom: 7, left: 7, right: 7 }}
-              />
-            );
-          })}
-          {/* 3rd quarter angle Edge hitbox */}
-          {slices.map((slice, i) => {
-            const angle = slice.startAngle + slice.sweepAngle * 0.75;
-            const radians = (angle - 90) * (Math.PI / 180);
-            const x = center + radius * Math.cos(radians);
-            const y = center + radius * Math.sin(radians);
-    
-            return (
-              <Pressable
-                key={i}
-                onPressIn={() => {
-                  console.log("3rd quarter angle Edge hitbox");
-                  setSelectedIndex(i);
-                }}
-                onPressOut={() => setSelectedIndex(null)}
-                style={[
-                  styles.pressable,
-                  {
-                    left: x,
-                    top: y,
-                  },
-                ]}
-                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
-              />
-            );
-          })}
-          {/* 3rd quarter angle middle hitbox */}
-          {slices.map((slice, i) => {
-            const angle = slice.startAngle + slice.sweepAngle * 0.75;
-            const radians = (angle - 90) * (Math.PI / 180);
-            const x = center + (radius / 2) * Math.cos(radians);
-            const y = center + (radius / 2) * Math.sin(radians);
-    
-            return (
-              <Pressable
-                key={i}
-                onPressIn={() => {
-                  console.log(" 3rd quarter angle middle hitbox ");
-                  setSelectedIndex(i);
-                }}
-                onPressOut={() => setSelectedIndex(null)}
-                style={[
-                  styles.pressable,
-                  {
-                    left: x,
-                    top: y,
-                  },
-                ]}
-                hitSlop={{ top: 7, bottom: 7, left: 7, right: 7 }}
-              />
-            );
-          })}
+			<Pressable onPress={handlePress} onPressOut={() => setSelectedIndex(null)}>
+				<Svg
+					width={radius * 2}
+					height={radius * 2}
+					// onPress={handlePress} // Handle touch events
+				>
+					{slices.map((slice, i) => {
+						const isSelected = selectedIndex === i;
+						return (
+							<Path
+								key={i}
+								d={describeArc(center, center, radius, slice.startAngle, slice.sweepAngle)}
+								fill={isSelected ? darkenColor(slice.color, 0.2) : slice.color}
+							/>
+						);
+					})}
+				</Svg>
 
-          {/* 3rd quarter angle middle hitbox */}
-          {slices.map((slice, i) => {
-            const angle = slice.startAngle + slice.sweepAngle * 0.8;
-            const radians = (angle - 90) * (Math.PI / 180);
-            const x = center + radius * Math.cos(radians);
-            const y = center + radius * Math.sin(radians);
-    
-            return (
-              <Pressable
-                key={i}
-                onPressIn={() => {
-                  console.log(" 3rd quarter angle middle hitbox ");
-                  setSelectedIndex(i);
-                }}
-                onPressOut={() => setSelectedIndex(null)}
-                style={[
-                  styles.pressable,
-                  {
-                    left: x,
-                    top: y,
-                  },
-                ]}
-                hitSlop={{ top: 7, bottom: 7, left: 7, right: 7 }}
-              />
-            );
-          })}
-          {/* 3rd quarter angle middle hitbox */}
-          {slices.map((slice, i) => {
-            const angle = slice.startAngle + slice.sweepAngle * 0.2;
-            const radians = (angle - 90) * (Math.PI / 180);
-            const x = center + radius * Math.cos(radians);
-            const y = center + radius * Math.sin(radians);
-    
-            return (
-              <Pressable
-                key={i}
-                onPressIn={() => {
-                  console.log(" 3rd quarter angle middle hitbox ");
-                  setSelectedIndex(i);
-                }}
-                onPressOut={() => setSelectedIndex(null)}
-                style={[
-                  styles.pressable,
-                  {
-                    left: x,
-                    top: y,
-                  },
-                ]}
-                hitSlop={{ top: 7, bottom: 7, left: 7, right: 7 }}
-              />
-            );
-          })}
-          {/* 3rd quarter angle middle hitbox */}
-          {slices.map((slice, i) => {
-            const angle = slice.startAngle + slice.sweepAngle * 0.3;
-            const radians = (angle - 90) * (Math.PI / 180);
-            const x = center + radius * Math.cos(radians);
-            const y = center + radius * Math.sin(radians);
-    
-            return (
-              <Pressable
-                key={i}
-                onPressIn={() => {
-                  console.log(" 3rd quarter angle middle hitbox ");
-                  setSelectedIndex(i);
-                }}
-                onPressOut={() => setSelectedIndex(null)}
-                style={[
-                  styles.pressable,
-                  {
-                    left: x,
-                    top: y,
-                  },
-                ]}
-                hitSlop={{ top: 7, bottom: 7, left: 7, right: 7 }}
-              />
-            );
-          })}
-          {/* 3rd quarter angle middle hitbox */}
-          {slices.map((slice, i) => {
-            const angle = slice.startAngle + slice.sweepAngle * 0.4;
-            const radians = (angle - 90) * (Math.PI / 180);
-            const x = center + radius * Math.cos(radians);
-            const y = center + radius * Math.sin(radians);
-    
-            return (
-              <Pressable
-                key={i}
-                onPressIn={() => {
-                  console.log(" 3rd quarter angle middle hitbox ");
-                  setSelectedIndex(i);
-                }}
-                onPressOut={() => setSelectedIndex(null)}
-                style={[
-                  styles.pressable,
-                  {
-                    left: x,
-                    top: y,
-                  },
-                ]}
-                hitSlop={{ top: 7, bottom: 7, left: 7, right: 7 }}
-              />
-            );
-          })}
+			</Pressable>
         </View>
       );
     };
@@ -481,12 +129,8 @@ const PieChartTimer: FC<PieChartTimer> = ({ radius = 150 }) => {
         height: 300,
       },
       pressable: {
-        position: "absolute",
-        width: 30,
-        height: 30,
-        marginLeft: -15,
-        marginTop: -15,
-        backgroundColor: "transparent",
+        position: 'absolute',
+        backgroundColor: 'transparent',
       },
     });
 const darkenColor = (hex: string, percent: number): string => {
