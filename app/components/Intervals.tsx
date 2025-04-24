@@ -16,7 +16,7 @@ const Interval: FC<IntervalProps> = ({ title, mins }) => {
             <HStack space="md">
                 <Text>{title}</Text>
                 <Text>:</Text>
-                <Text>{mins} mins</Text>
+                <Text>{mins / 60} mins</Text>
             </HStack>
         </Center>
     </Box>

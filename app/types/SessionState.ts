@@ -3,6 +3,7 @@ type SessionState = {
     intervalsTitle: string[]
     currentIndex: number;
     remaining: number;
+    remainingOverAll: number
     isRunning: boolean;
     timer: NodeJS.Timeout | null; // Holds the reference to the timer
     startSession: (intervals: number[]) => void; // Start session with intervals

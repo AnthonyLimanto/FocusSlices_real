@@ -7,11 +7,12 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     remaining: 0,
     isRunning: false,
     timer: null,
+    remainingOverAll: 0,
 
     startSession: (intervals) => {
         const { isRunning } = get();
         if (isRunning) return;
-        const firstInterval = intervals[0] * 60;
+        const firstInterval = intervals[0];
         set({
             intervals,          // Save the full intervals array in state
             currentIndex: 0,    // Start at the first interval
@@ -29,6 +30,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
             nextInterval();
         } else {
             set((state) => ({remaining: state.remaining - 1}));
+            set((state) => ({remainingOverAll: state.remainingOverAll - 1}));
         }
     },
 
@@ -41,7 +43,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
         if (nextIndex >= intervals.length) {
             set({isRunning: false, timer: null, remaining: 0})
         } else {
-            const newTime = intervals[nextIndex] * 60;
+            const newTime = intervals[nextIndex];
             const newTimer = setInterval(() => get().tick(), 1000);
             set({remaining: newTime,
                 currentIndex: nextIndex,
@@ -72,11 +74,11 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     },
 
     addInterval: (mins: number, title: string) => {
-        const{intervals, intervalsTitle} = get();
-        intervals.push(mins);
+        const{intervals, intervalsTitle, remainingOverAll} = get();
+        intervals.push(mins * 60);
         intervalsTitle.push(title);
         set({
-            intervals, intervalsTitle
+            intervals, intervalsTitle, remainingOverAll: remainingOverAll + mins * 60
         })
     }
 }));    

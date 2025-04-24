@@ -7,6 +7,7 @@ import { useSessionStore } from "../session/sessionStore";
 import Svg, { Path } from "react-native-svg";
 import { G } from 'react-native-svg';
 import { ButtonText } from "@/components/ui/button";
+import { rem } from "react-native-css-interop";
 
 interface PieChartTimer {
     radius?: number;
@@ -59,12 +60,17 @@ const getPieSlices = (intervals: number[], titles: string[]): Slice[] => {
     });
 };
 
-// TODO make prettier
+// TODO make the ticker prettier, like change colour based on slice and add a ticking hand maybe
 const PieChartTimer: FC<PieChartTimer> = ({ radius = 150 }) => {
-    const {remaining, startSession, resumeSession, pauseSession, isRunning, intervals, intervalsTitle, currentIndex} = useSessionStore();
+    const {remainingOverAll ,remaining, startSession, resumeSession, pauseSession, isRunning, intervals, intervalsTitle, currentIndex} = useSessionStore();
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const slices = getPieSlices(intervals, intervalsTitle);
     const center = radius;
+    const totalTime = intervals.reduce((accumulator, interval) => accumulator + interval, 0);
+
+    let timePassed = totalTime - remainingOverAll
+    let currTimeAngle = (timePassed / totalTime) * 360;
+    console.log(remainingOverAll / 60);
 
 	const handlePress = (event: any) => {
 		const { locationX, locationY } = event.nativeEvent;
@@ -108,13 +114,20 @@ const PieChartTimer: FC<PieChartTimer> = ({ radius = 150 }) => {
 					{slices.map((slice, i) => {
 						const isSelected = selectedIndex === i;
 						return (
+              <>
 							<Path
 								key={i}
 								d={describeArc(center, center, radius, slice.startAngle, slice.sweepAngle)}
 								fill={isSelected ? darkenColor(slice.color, 0.2) : slice.color}
 							/>
+             <Path
+								d={describeArc(center, center, radius, 0, currTimeAngle)}
+								fill={darkenColor(slice.color, 0.2)}
+							/> 
+              </>
 						);
 					})}
+          
 				</Svg>
 
 			</Pressable>
