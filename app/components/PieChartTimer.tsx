@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { Alert, Pressable, Text, View, StyleSheet } from "react-native";
 import { useSessionStore } from "../session/sessionStore";
-import Svg, { Path } from "react-native-svg";
+import Svg, { Circle, Path } from "react-native-svg";
 
 interface PieChartTimer {
     radius?: number;
@@ -106,6 +106,24 @@ const PieChartTimer: FC<PieChartTimer> = ({ radius = 150 }) => {
 				>
 					{slices.map((slice, i) => {
 						const isSelected = selectedIndex === i;
+            if (intervals.length === 1) {
+              return (
+                <>
+                <Circle
+                  key={"circle"} // Add a unique key
+                  cx={center} // Center X-coordinate
+                  cy={center} // Center Y-coordinate
+                  r={radius} // Radius of the circle
+                  fill={isSelected ? darkenColor(slice.color, 0.2) : slice.color} // Dynamic fill color
+                />
+                  <Path
+                  key={i + 1000}
+                  d={describeArc(center, center, radius, 0, currTimeAngle)}
+                  fill={darkenColor(slice.color, 0.2)}
+                /> 
+              </>
+              )
+            }
 						return (
               <>
 							<Path
@@ -114,6 +132,7 @@ const PieChartTimer: FC<PieChartTimer> = ({ radius = 150 }) => {
 								fill={isSelected ? darkenColor(slice.color, 0.2) : slice.color}
 							/>
              <Path
+                key={i + 1000}
 								d={describeArc(center, center, radius, 0, currTimeAngle)}
 								fill={darkenColor(slice.color, 0.2)}
 							/> 

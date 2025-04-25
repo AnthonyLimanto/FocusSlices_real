@@ -35,30 +35,38 @@ export default function Timer() {
 
     useEffect(() => {
         let sound: Audio.Sound | null = null; // Track the sound object
+        let isMounted = true; // Flag to prevent race conditions
     
         const playSound = async () => {
             try {
                 const { sound: newSound } = await Audio.Sound.createAsync(
                     require('../../assets/sounds/s3_spring_rain.mp3')
                 );
+                if (!isMounted) {
+                    // If the component is unmounted, unload the sound immediately
+                    await newSound.unloadAsync();
+                    return;
+                }
                 sound = newSound; // Assign the sound object to the variable
                 await sound.playAsync();
-                sound.setOnPlaybackStatusUpdate((status) => {
-                    if (status.isLoaded && status.didJustFinish) {
-                        sound?.unloadAsync(); // Unload the sound when it finishes
-                    }
-                });
             } catch (error) {
                 console.error('Error playing sound:', error);
             }
         };
     
-        playSound();
+        if (isRunning) {
+            playSound();
+        }
     
         // Cleanup function to unload the sound
         return () => {
+            isMounted = false; // Prevent further actions if the component is unmounted
             if (sound) {
-                sound.unloadAsync(); // Ensure the sound is unloaded
+                try {
+                    sound.unloadAsync(); // Ensure the sound is unloaded
+                } catch (error) {
+                    console.error('Error unloading sound:', error);
+                }
             }
         };
     }, [currentIndex]);

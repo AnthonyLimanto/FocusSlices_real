@@ -28,7 +28,7 @@ import {
 
 const AddInterval = () => {
   const [showActionsheet, setShowActionsheet] = useState(false);
-  const [selectedMinutes, setSelectedMinutes] = useState(0); // default to 25
+  const [selectedMinutes, setSelectedMinutes] = useState(5); 
   const [title, setTitle] = useState("");
   const {intervals, intervalsTitle, addInterval} = useSessionStore();
   const values: ItemType[] = Array.from({ length: 60 }, (_, i) => ({

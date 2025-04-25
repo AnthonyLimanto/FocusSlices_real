@@ -32,7 +32,6 @@ const renderInterval = ({ item }: { item: { title: string; mins: number } }) => 
 	<Intervals title={item.title} mins={item.mins} />
   );
   
-
 const combineIntervals = (intervals: number[], titles: string[]) => {
 	return intervals.map((mins, index) => ({
 		title: titles[index] || `Interval ${index + 1}`,
@@ -53,9 +52,9 @@ export default function TimerSetup() {
           	<Center>
             	<Text>Edit Alarm</Text>
 				<FlatList
+					keyExtractor={(item) => item.key}
 					data={combineData}
 					renderItem={renderInterval}
-					keyExtractor={(item) => item.key}
 					onEndReachedThreshold={0.5}
 					ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
 				/>
