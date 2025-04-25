@@ -117,7 +117,7 @@ const PieChartTimer: FC<PieChartTimer> = ({ radius = 150 }) => {
                   fill={isSelected ? darkenColor(slice.color, 0.2) : slice.color} // Dynamic fill color
                 />
                   <Path
-                  key={i + 1000}
+                  key={"path"}
                   d={describeArc(center, center, radius, 0, currTimeAngle)}
                   fill={darkenColor(slice.color, 0.2)}
                 /> 
@@ -134,7 +134,7 @@ const PieChartTimer: FC<PieChartTimer> = ({ radius = 150 }) => {
              <Path
                 key={i + 1000}
 								d={describeArc(center, center, radius, 0, currTimeAngle)}
-								fill={darkenColor(slice.color, 0.2)}
+								fill={darkenColor(slices[currentIndex].color, 0.2)}
 							/> 
               </>
 						);
