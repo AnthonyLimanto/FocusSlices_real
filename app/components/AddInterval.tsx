@@ -10,25 +10,50 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { Center } from "@/components/ui/center";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Text, TextInput } from "react-native";
 import {Picker} from '@react-native-picker/picker';
 import WheelPickerExpo from 'react-native-wheel-picker-expo'; // Ensure this is the correct library
 import { ItemType } from "react-native-wheel-picker-expo/lib/typescript/types";
 import { useSessionStore } from "../session/sessionStore";
+import {
+  SectionsWheelPicker,
+  SegmentedControl,
+  WheelPicker,
+  WheelPickerProps,
+} from 'react-native-ui-lib';
+
 // import { useSessionStore } from "../session/sessionStore"; // Uncomment and use when ready
+
 
 const AddInterval = () => {
   const [showActionsheet, setShowActionsheet] = useState(false);
   const [selectedMinutes, setSelectedMinutes] = useState(0); // default to 25
   const [title, setTitle] = useState("");
   const {intervals, intervalsTitle, addInterval} = useSessionStore();
-
-
   const values: ItemType[] = Array.from({ length: 60 }, (_, i) => ({
-    label: `${i + 1} min`,
+    label: `${i + 1}`,
     value: i + 1,
   }));
+  const onTimeChange = useCallback((item: number | string) => {
+    setSelectedMinutes(item as number);
+  }, []);
+
+  const sections: WheelPickerProps<string | number>[] = useMemo(() => {
+    return [
+      {
+        items: values,
+        onChange: onTimeChange,
+        initialValue: selectedMinutes,
+      }
+    ];
+  }, [
+    selectedMinutes,
+    onTimeChange
+  ]);
+
+
+  
 
   const handleClose = () => setShowActionsheet(false);
 
@@ -77,16 +102,8 @@ const AddInterval = () => {
 
               <Box>
                 <Text style={{ marginVertical: 8, marginBottom: 4, fontSize: 16 }}>Select Minutes</Text>
-                <WheelPickerExpo
-                    items={values} // Use the array of ItemType objects
-                    initialSelectedIndex={selectedMinutes - 1} // 0-based index
-                    onChange={({ index, item }) => setSelectedMinutes(item.value)} // Use value from ItemType
-                    height={180}
-                    width={150}
-                    renderItem={({ label, fontSize, fontColor, textAlign }) => (
-                    <Text style={{ fontSize, color: fontColor, textAlign }}>{label}</Text>
-                    )}
-                />
+                <WheelPicker initialValue={5} label={'Mins'} items={values} numberOfVisibleRows={4} onChange={onTimeChange}/>
+                <Text style={{ fontSize: 11, textAlign: 'center' }}>hi</Text>
               </Box>
 
               <Button onPress={handleSave}>

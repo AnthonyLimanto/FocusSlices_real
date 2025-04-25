@@ -1,13 +1,7 @@
 import React, { FC, useState } from "react";
 import { Alert, Pressable, Text, View, StyleSheet } from "react-native";
-import { Box } from "@/components/ui/box";
-import { HStack } from "@/components/ui/hstack";
-import { Center } from "@/components/ui/center";
 import { useSessionStore } from "../session/sessionStore";
 import Svg, { Path } from "react-native-svg";
-import { G } from 'react-native-svg';
-import { ButtonText } from "@/components/ui/button";
-import { rem } from "react-native-css-interop";
 
 interface PieChartTimer {
     radius?: number;
@@ -70,7 +64,6 @@ const PieChartTimer: FC<PieChartTimer> = ({ radius = 150 }) => {
 
     let timePassed = totalTime - remainingOverAll
     let currTimeAngle = (timePassed / totalTime) * 360;
-    console.log(remainingOverAll / 60);
 
 	const handlePress = (event: any) => {
 		const { locationX, locationY } = event.nativeEvent;
