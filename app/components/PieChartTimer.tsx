@@ -25,6 +25,7 @@ const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
 const describeArc = (x, y, radius, startAngle, sweepAngle) => {
     const start = polarToCartesian(x, y, radius, startAngle);
     const end = polarToCartesian(x, y, radius, startAngle + sweepAngle);
+
   
     const largeArcFlag = sweepAngle > 180 ? 1 : 0;
   
@@ -62,7 +63,7 @@ const PieChartTimer: FC<PieChartTimer> = ({ radius = 150 }) => {
     const center = radius;
     const totalTime = intervals.reduce((accumulator, interval) => accumulator + interval, 0);
 
-    let timePassed = totalTime - remainingOverAll
+    let timePassed = totalTime - remainingOverAll;
     let currTimeAngle = (timePassed / totalTime) * 360;
 
 	const handlePress = (event: any) => {
@@ -102,7 +103,6 @@ const PieChartTimer: FC<PieChartTimer> = ({ radius = 150 }) => {
 				<Svg
 					width={radius * 2}
 					height={radius * 2}
-					// onPress={handlePress} // Handle touch events
 				>
 					{slices.map((slice, i) => {
 						const isSelected = selectedIndex === i;
@@ -117,7 +117,7 @@ const PieChartTimer: FC<PieChartTimer> = ({ radius = 150 }) => {
                   fill={isSelected ? darkenColor(slice.color, 0.2) : slice.color} // Dynamic fill color
                 />
                   <Path
-                  key={"path"}
+                  key={`path for circle ${i}`}
                   d={describeArc(center, center, radius, 0, currTimeAngle)}
                   fill={darkenColor(slice.color, 0.2)}
                 /> 
@@ -131,15 +131,35 @@ const PieChartTimer: FC<PieChartTimer> = ({ radius = 150 }) => {
 								d={describeArc(center, center, radius, slice.startAngle, slice.sweepAngle)}
 								fill={isSelected ? darkenColor(slice.color, 0.2) : slice.color}
 							/>
-             <Path
-                key={i + 1000}
-								d={describeArc(center, center, radius, 0, currTimeAngle)}
-								fill={darkenColor(slices[currentIndex].color, 0.2)}
-							/> 
               </>
 						);
 					})}
-          
+          {slices.slice(0, currentIndex + 1).map((slice, index) => {
+            console.log(currTimeAngle);
+            return (
+              <Path
+                  key={index + 1000} // Ensure each Path has a unique key
+                  d={describeArc(center, center, radius, slice.startAngle, currTimeAngle - slice.startAngle)}
+                  fill={darkenColor(slice.color, 0.2)}
+              />
+            )
+      })}
+        {currTimeAngle === 360 && (
+          <Path
+              key={10000} // Ensure each Path has a unique key
+              d={describeArc(center, center, radius, slices[0].startAngle, slices[0].sweepAngle)}
+              fill={darkenColor(slices[0].color, 0.2)}
+          />
+        )}
+        {intervals.length == 1 &&
+          (<Circle
+            key={"circle"} // Add a unique key
+            cx={center} // Center X-coordinate
+            cy={center} // Center Y-coordinate
+            r={radius} // Radius of the circle
+            fill={darkenColor(slices[0].color, 0.2)} // Dynamic fill color
+          />)
+        }
 				</Svg>
 
 			</Pressable>

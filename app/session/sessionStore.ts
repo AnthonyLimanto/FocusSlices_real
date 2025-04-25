@@ -13,11 +13,13 @@ export const useSessionStore = create<SessionState>((set, get) => ({
         const { isRunning } = get();
         if (isRunning) return;
         const firstInterval = intervals[0];
+        const total = intervals.reduce((acc, interval) => interval = acc + interval, 0);
         set({
             intervals,          // Save the full intervals array in state
             currentIndex: 0,    // Start at the first interval
             remaining: firstInterval, // Set how much time is left (in seconds)
             isRunning: true,    // Mark the session as active
+            remainingOverAll: total
           });
         
         const timer = setInterval(() => get().tick(), 1000);
@@ -41,7 +43,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
         
         const nextIndex = currentIndex + 1;
         if (nextIndex >= intervals.length) {
-            set({isRunning: false, timer: null, remaining: 0})
+            set({isRunning: false, timer: null, remaining: 0, remainingOverAll: 0})
         } else {
             const newTime = intervals[nextIndex];
             const newTimer = setInterval(() => get().tick(), 1000);
